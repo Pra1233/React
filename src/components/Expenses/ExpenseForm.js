@@ -1,57 +1,69 @@
 import React, { useState } from "react";
 import "./ExpenseForm.css";
 
-const ExpenseForm = () => {
-  // const [title, setTitle] = useState("");
-  // const [amount, setAmount] = useState("");
-  // const [date, setDate] = useState("");
-  const [userInput, setUserInput] = useState({
-    title: "",
-    amount: "",
-    date: "",
-  });
+const ExpenseForm = (props) => {
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  // const [userInput, setUserInput] = useState({
+  //   title: "",
+  //   amount: "",
+  //   date: "",
+  // });
 
   const titleChangeHandler = (event) => {
-    // console.log("Title Changed", event.target.value);
-    // setUserInput({
-    //   ...userInput,//depend on previous state
-    //   title: event.target.value,//override
+    setTitle(event.target.value);
+    // setUserInput((prevState) => {
+    //   //react guarantee state snapshot is latest
+    //   return { ...prevState, title: event.target.value };
     // });
-
-    //react schedule state update doesnt perform instantly  and therefore if lots of state update at sametime
-    //could be depending on old state in this approch
-    setUserInput((prevState) => {
-      //react guarantee state snapshot is latest
-      return { ...prevState, title: event.target.value };
-    });
   };
 
   const amountChangeHandler = (event) => {
-    // console.log("Amount", event.target.value);
-    setUserInput((prevState) => {
-      return {
-        ...prevState,
-        amount: event.target.value,
-      };
-    });
+    setAmount(event.target.value);
+    // setUserInput((prevState) => {
+    //   return {
+    //     ...prevState,
+    //     amount: event.target.value,
+    //   };
+    // });
   };
+
   const dateChangeHandler = (event) => {
-    setUserInput((prevState) => {
-      return {
-        ...prevState,
-        date: event.target.value,
-      };
-    });
+    setDate(event.target.value);
+    // setUserInput((prevState) => {
+    //   return {
+    //     ...prevState,
+    //     date: event.target.value,
+    //   };
+    // });
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    // OBJECT
+    const expenseobj = {
+      title: title,
+      amount: amount,
+      date: new Date(date),
+    };
+    props.onSaveExpenseData(expenseobj); //calling here
+    // console.log(expenseobj);
+    setTitle("");
+    setAmount("");
+    setDate("");
   };
   return (
     <div className="new-expense">
-      <form>
+      <form onSubmit={submitHandler}>
         <div className="new-expense__controls">
           <div className="new-expense__control">
             <label>Title</label>
             <input
               type="text"
-              placeholder="Enter Amount"
+              value={title}
+              placeholder="Enter Title"
               onChange={titleChangeHandler}
             />
           </div>
@@ -59,8 +71,10 @@ const ExpenseForm = () => {
             <label>Amount</label>
             <input
               type="number"
-              min="0.01"
+              placeholder="Enter Amount"
+              min="1"
               steps="0.01"
+              value={amount}
               onChange={amountChangeHandler}
             />
           </div>
@@ -70,6 +84,7 @@ const ExpenseForm = () => {
               type="date"
               min="2022-01-01"
               max="2022-12-31"
+              value={date}
               onChange={dateChangeHandler}
             />
           </div>
