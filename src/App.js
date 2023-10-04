@@ -1,48 +1,44 @@
-import React, { useState } from "react";
-
-import CourseGoalList from "./components/CourseGoals/CourseGoalList/CourseGoalList";
-import CourseInput from "./components/CourseGoals/CourseInput/CourseInput";
 import "./App.css";
+import React, { useState } from "react";
+import FormInput from "./components/Form/FormInput";
+import FormList from "./components/FormList/FormList";
 
-const App = () => {
-  const [courseGoals, setCourseGoals] = useState([
-    { text: "Do all exercises!", id: "g1" },
-    { text: "Finish the course!", id: "g2" },
-  ]);
+function App() {
+  const [userDetail, setUserDetail] = useState([]);
 
-  const addGoalHandler = (enteredText) => {
-    setCourseGoals((prevGoals) => {
-      const updatedGoals = [...prevGoals];
-      updatedGoals.unshift({ text: enteredText, id: Math.random().toString() });
-      return updatedGoals;
+  const adduserHandler = (name, age) => {
+    //function called from FormInput
+    setUserDetail((prevarray) => {
+      return [
+        ...prevarray,
+        { name: name, age: age, id: Math.random().toString() },
+      ];
     });
   };
-
-  const deleteItemHandler = (goalId) => {
-    setCourseGoals((prevGoals) => {
-      const updatedGoals = prevGoals.filter((goal) => goal.id !== goalId);
-      return updatedGoals;
+  const deleteItemHandler = (Id) => {
+    setUserDetail((prevDetail) => {
+      //rmove from array
+      const updatedDetails = prevDetail.filter((user) => user.id !== Id);
+      return updatedDetails;
     });
   };
-
   let content = (
     <p style={{ textAlign: "center" }}>No goals found. Maybe add one?</p>
   );
 
-  if (courseGoals.length > 0) {
+  if (userDetail.length > 0) {
     content = (
-      <CourseGoalList items={courseGoals} onDeleteItem={deleteItemHandler} />
+      <FormList users={userDetail} deleteItemHandler={deleteItemHandler} />
     );
   }
-
   return (
-    <>
+    <div>
       <section id="goal-form">
-        <CourseInput onAddGoal={addGoalHandler} />
+        <FormInput adduserHandler={adduserHandler} />
       </section>
       <section id="goals">{content}</section>
-    </>
+    </div>
   );
-};
+}
 
 export default App;
