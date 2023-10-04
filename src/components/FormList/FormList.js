@@ -12,7 +12,7 @@ const FormList = (props) => {
             className="goal-item"
             onClick={() => props.deleteItemHandler(item.id)}
           >
-            {`${item.name} (${item.age} years old )`}
+            {`${item.name} (${item.age} years old )   CollegeName:${item.collegeName}`}
           </li>
         ))}
       </ul>

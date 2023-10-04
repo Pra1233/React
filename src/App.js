@@ -6,12 +6,17 @@ import FormList from "./components/FormList/FormList";
 function App() {
   const [userDetail, setUserDetail] = useState([]);
 
-  const adduserHandler = (name, age) => {
+  const adduserHandler = (name, age, collegeName) => {
     //function called from FormInput
     setUserDetail((prevarray) => {
       return [
         ...prevarray,
-        { name: name, age: age, id: Math.random().toString() },
+        {
+          name: name,
+          age: age,
+          collegeName: collegeName,
+          id: Math.random().toString(),
+        },
       ];
     });
   };
