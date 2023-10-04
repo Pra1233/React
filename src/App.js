@@ -1,48 +1,38 @@
-import "./App.css";
-import React, { useState } from "react";
-import FormInput from "./components/Form/FormInput";
-import FormList from "./components/FormList/FormList";
+import React, { useEffect, useState } from "react";
+
+import Login from "./components/Login/Login";
+import Home from "./components/Home/Home";
+import MainHeader from "./components/MainHeader/MainHeader";
 
 function App() {
-  const [userDetail, setUserDetail] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const adduserHandler = (name, age, collegeName) => {
-    //function called from FormInput
-    setUserDetail((prevarray) => {
-      return [
-        ...prevarray,
-        {
-          name: name,
-          age: age,
-          collegeName: collegeName,
-          id: Math.random().toString(),
-        },
-      ];
-    });
-  };
-  const deleteItemHandler = (Id) => {
-    setUserDetail((prevDetail) => {
-      //rmove from array
-      const updatedDetails = prevDetail.filter((user) => user.id !== Id);
-      return updatedDetails;
-    });
-  };
-  let content = (
-    <p style={{ textAlign: "center" }}>No goals found. Maybe add one?</p>
-  );
+  useEffect(() => {
+    const user = localStorage.getItem("Login");
+    if (user === "1") {
+      setIsLoggedIn(true);
+    }
+  }, []); //dependicies is not changed so run once // Run after Execution of component
 
-  if (userDetail.length > 0) {
-    content = (
-      <FormList users={userDetail} deleteItemHandler={deleteItemHandler} />
-    );
-  }
+  const loginHandler = (email, password) => {
+    // We should of course check email and password
+    // But it's just a dummy/ demo anyways
+    localStorage.setItem("Login", "1");
+    setIsLoggedIn(true); //run component again
+  };
+
+  const logoutHandler = () => {
+    setIsLoggedIn(false);
+  };
+
   return (
-    <div>
-      <section id="goal-form">
-        <FormInput adduserHandler={adduserHandler} />
-      </section>
-      <section id="goals">{content}</section>
-    </div>
+    <React.Fragment>
+      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+      <main>
+        {!isLoggedIn && <Login onLogin={loginHandler} />}
+        {isLoggedIn && <Home onLogout={logoutHandler} />}
+      </main>
+    </React.Fragment>
   );
 }
 
