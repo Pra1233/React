@@ -1,38 +1,36 @@
-import React, { useEffect, useState } from "react";
-
-import Login from "./components/Login/Login";
-import Home from "./components/Home/Home";
-import MainHeader from "./components/MainHeader/MainHeader";
+import "./App.css";
+import React, { useState } from "react";
+import Form from "./components/Form";
+import ProductList from "./components/ProductList";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userDetail, setUserDetail] = useState([]);
 
-  useEffect(() => {
-    const user = localStorage.getItem("Login");
-    if (user === "1") {
-      setIsLoggedIn(true);
-    }
-  }, []); //dependicies is not changed so run once // Run after Execution of component
-
-  const loginHandler = (email, password) => {
-    // We should of course check email and password
-    // But it's just a dummy/ demo anyways
-    localStorage.setItem("Login", "1");
-    setIsLoggedIn(true); //run component again
+  const adduserHandler = (obj) => {
+    setUserDetail((userDetail) => {
+      return [
+        ...userDetail,
+        {
+          id: obj.id,
+          price: obj.price,
+          productName: obj.productName,
+        },
+      ];
+    });
   };
 
-  const logoutHandler = () => {
-    setIsLoggedIn(false);
+  const deleteUserHandler = (id) => {
+    setUserDetail((userDetail) => {
+      const updatedDetail = userDetail.filter((user) => user.id !== id);
+      return updatedDetail;
+    });
   };
 
   return (
-    <React.Fragment>
-      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
-      <main>
-        {!isLoggedIn && <Login onLogin={loginHandler} />}
-        {isLoggedIn && <Home onLogout={logoutHandler} />}
-      </main>
-    </React.Fragment>
+    <div>
+      <Form adduserHandler={adduserHandler} />
+      <ProductList data={userDetail} deleteUserHandler={deleteUserHandler} />
+    </div>
   );
 }
 
